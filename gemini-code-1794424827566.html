@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whiteout Survival (WOS) — Ледяное Убежище</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0f18;
+            --bg-card: rgba(16, 26, 40, 0.85);
+            --ice-blue: #00e5ff;
+            --ice-glow: rgba(0, 229, 255, 0.3);
+            --fire-orange: #ff6b35;
+            --fire-glow: rgba(255, 107, 55, 0.4);
+            --text-main: #e2f1ff;
+            --text-muted: #8ba2b8;
+            --border-ice: rgba(0, 229, 255, 0.25);
+            --radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            background-image: 
+                radial-gradient(circle at 20% 10%, rgba(0, 229, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 80% 60%, rgba(255, 107, 55, 0.07) 0%, transparent 40%);
+            background-attachment: fixed;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- Header & Nav --- */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(10, 15, 24, 0.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-ice);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .logo span {
+            color: var(--ice-blue);
+            text-shadow: 0 0 10px var(--ice-glow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--ice-blue);
+        }
+
+        .burger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .burger div {
+            width: 25px;
+            height: 3px;
+            background-color: var(--text-main);
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 1.2rem;
+            text-transform: uppercase;
+        }
+
+        .hero-title .fire-text {
+            color: var(--fire-orange);
+            text-shadow: 0 0 15px var(--fire-glow);
+        }
+
+        .hero-desc {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.9rem 2rem;
+            border-radius: var(--radius);
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--fire-orange), #ff9f1c);
+            color: #fff;
+            box-shadow: 0 4px 20px var(--fire-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px var(--fire-glow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--ice-blue);
+            border: 2px solid var(--ice-blue);
+            box-shadow: 0 0 15px var(--ice-glow);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 229, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .hero-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-ice);
+            border-radius: var(--radius);
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--ice-blue), var(--fire-orange));
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.2rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--ice-blue);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* --- Sections General --- */
+        section {
+            max-width: 1200px;
+            margin: 5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* --- Features Cards --- */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-ice);
+            border-radius: var(--radius);
+            padding: 2rem;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--ice-blue);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+
+        .card-text {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* --- Interactive Furnace Calculator --- */
+        .calc-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-ice);
+            border-radius: var(--radius);
+            padding: 2.5rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--fire-orange);
+        }
+
+        .calc-results {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .res-card {
+            text-align: center;
+            background: rgba(0,0,0,0.2);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .res-name {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .res-val {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--fire-orange);
+        }
+
+        /* --- Heroes Section --- */
+        .hero-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .hero-item {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--fire-orange);
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+        .hero-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #1e2d42, #3b5275);
+            margin: 0 auto 1rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            border: 2px solid var(--ice-blue);
+        }
+
+        /* --- Footer --- */
+        footer {
+            border-top: 1px solid var(--border-ice);
+            background: #060910;
+            padding: 3rem 1.5rem 1.5rem;
+            margin-top: 5rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-copy {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 1.5rem;
+        }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .btn-group {
+                justify-content: center;
+            }
+
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                right: -100%;
+                top: 70px;
+                flex-direction: column;
+                background: rgba(10, 15, 24, 0.98);
+                width: 100%;
+                text-align: center;
+                padding: 2rem 0;
+                gap: 1.5rem;
+                transition: 0.3s ease;
+                border-bottom: 1px solid var(--border-ice);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .burger {
+                display: flex;
+            }
+
+            .hero-title {
+                font-size: 2.2rem;
+            }
+
+            .calc-results {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <span>❄️ WOS</span> Hub
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#hero">Главная</a></li>
+                <li><a href="#features">Особенности</a></li>
+                <li><a href="#calc">Калькулятор Очага</a></li>
+                <li><a href="#heroes">Герои</a></li>
+                <li><a href="#community">Альянсы</a></li>
+            </ul>
+            <div class="burger" id="burgerToggle">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-text">
+            <h1 class="hero-title">Выживай в <span class="fire-text">Ледяном Аду</span></h1>
+            <p class="hero-desc">Развивай своё убежище, зажигай Очаг и сражайся против вечной мерзлоты и вражеских альянсов в Whiteout Survival.</p>
+            <div class="btn-group">
+                <a href="#" class="btn btn-primary">🔥 Скачать WOS</a>
+                <a href="#calc" class="btn btn-secondary">⚡ Расчёт Ресурсов</a>
+            </div>
+        </div>
+        <div class="hero-card">
+            <h3 style="margin-bottom: 1rem; font-size: 1.4rem;">Статистика Сервера #1042</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-value">5.2M+</div>
+                    <div class="stat-label">Выживших</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">LVL 30</div>
+                    <div class="stat-label">Макс. Очаг</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">24/7</div>
+                    <div class="stat-label">Битвы Альянсов</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">98.4%</div>
+                    <div class="stat-label">Теплосети</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features">
+        <div class="section-header">
+            <h2 class="section-title">Главные Механики</h2>
+            <p class="section-subtitle">Всё, что нужно для выживания вашей цивилизации</p>
+        </div>
+        <div class="grid-3">
+            <div class="card">
+                <div class="card-icon">🔥</div>
+                <h3 class="card-title">Контроль Очага</h3>
+                <p class="card-text">Поддерживай огонь в центральном костре. Если температура упадёт — твои рабочие замерзнут и заболеют.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🛡️</div>
+                <h3 class="card-title">Война Альянсов</h3>
+                <p class="card-text">Объединяйся с игроками со всего мира. Захватывай Крепости и сражайся за титул Правителя Ледяного Замка.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🌲</div>
+                <h3 class="card-title">Сбор Ресурсов</h3>
+                <p class="card-text">Добывай Дерево, Уголь, Железо и Мясо в заснеженной пустоши для непрерывного развития базы.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Calculator -->
+    <section id="calc">
+        <div class="section-header">
+            <h2 class="section-title">Калькулятор Апгрейда Очага</h2>
+            <p class="section-subtitle">Узнай базовую потребность ресурсов для следующего уровня</p>
+        </div>
+        <div class="calc-box">
+            <div class="form-group">
+                <label for="furnaceLvl">Уровень Очага: <span id="lvlValue" style="color:var(--fire-orange);">15</span></label>
+                <input type="range" id="furnaceLvl" min="1" max="30" value="15">
+            </div>
+            <div class="calc-results">
+                <div class="res-card">
+                    <div class="res-name">🪵 Дерево</div>
+                    <div class="res-val" id="resWood">330,000</div>
+                </div>
+                <div class="res-card">
+                    <div class="res-name">⛏️ Уголь</div>
+                    <div class="res-val" id="resCoal">225,000</div>
+                </div>
+                <div class="res-card">
+                    <div class="res-name">⛓️ Железо</div>
+                    <div class="res-val" id="resIron">120,000</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Heroes Section -->
+    <section id="heroes">
+        <div class="section-header">
+            <h2 class="section-title">Легендарные Герои</h2>
+            <p class="section-subtitle">Собери сильнейшую команду для экспедиций и войн</p>
+        </div>
+        <div class="hero-list">
+            <div class="hero-item">
+                <span class="hero-badge">SSR</span>
+                <div class="hero-avatar">🏹</div>
+                <h3>Бахти</h3>
+                <p style="color:var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Снайпер / Атака</p>
+            </div>
+            <div class="hero-item">
+                <span class="hero-badge">SSR</span>
+                <div class="hero-avatar">🛡️</div>
+                <h3>Наталья</h3>
+                <p style="color:var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Пехота / Защита</p>
+            </div>
+            <div class="hero-item">
+                <span class="hero-badge" style="background: var(--ice-blue); color:#000;">SR</span>
+                <div class="hero-avatar">❄️</div>
+                <h3>Молли</h3>
+                <p style="color:var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Копейщик / Контроль</p>
+            </div>
+            <div class="hero-item">
+                <span class="hero-badge" style="background: var(--ice-blue); color:#000;">SR</span>
+                <div class="hero-avatar">⚔️</div>
+                <h3>Джина</h3>
+                <p style="color:var(--text-muted); font-size: 0.85rem; margin-top: 4px;">Скорость / Охота</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="community">
+        <div class="footer-content">
+            <div>
+                <div class="logo" style="margin-bottom: 1rem;"><span>❄️ WOS</span> Hub</div>
+                <p style="color: var(--text-muted); max-width: 300px; font-size: 0.9rem;">Неофициальный информационный портал и База Знаний по игре Whiteout Survival.</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 1rem;">Сообщество</h4>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Discord: #wos_ru</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Telegram: @wos_community</p>
+            </div>
+        </div>
+        <div class="footer-copy">
+            &copy; 2026 WOS Hub. Все права защищены. Дизайн адаптирован под мобильные устройства.
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const burger = document.getElementById('burgerToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        burger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close menu on link click
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Interactive Furnace Upgrade Calculator
+        const rangeInput = document.getElementById('furnaceLvl');
+        const lvlDisplay = document.getElementById('lvlValue');
+        const resWood = document.getElementById('resWood');
+        const resCoal = document.getElementById('resCoal');
+        const resIron = document.getElementById('resIron');
+
+        rangeInput.addEventListener('input', (e) => {
+            const lvl = parseInt(e.target.value);
+            lvlDisplay.innerText = lvl;
+
+            // Simple dynamic resource scaling formula
+            const wood = (lvl * 22000).toLocaleString('ru-RU');
+            const coal = (lvl * 15000).toLocaleString('ru-RU');
+            const iron = (lvl * 8000).toLocaleString('ru-RU');
+
+            resWood.innerText = wood;
+            resCoal.innerText = coal;
+            resIron.innerText = iron;
+        });
+    </script>
+</body>
+</html>
